@@ -42,7 +42,6 @@ function TopBar() {
               </a>
             </li>
           ))}
-       
         </ul>
          {/* Download CV Button */}
           <a
@@ -263,7 +262,7 @@ function BeyondCode() {
                   <h3 className="font-semibold">{e.title}</h3>
                   <span className="text-xs text-white/60">{e.meta}</span>
                 </div>
-                <p className="text-white/75 mt-2">{e.desc}</p>
+                
               </div>
             </li>
           ))}

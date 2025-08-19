@@ -16,34 +16,45 @@ type ContactBody = {
 
 type ContactResp = { ok: true } | { error: string }
 
+// Support either VITE_API_URL or VITE_API_BASE; trim trailing slashes.
+const RAW =
+  (import.meta.env.VITE_API_URL as string | undefined) ??
+  (import.meta.env.VITE_API_BASE as string | undefined)
+
 export const API_BASE =
-  import.meta.env.VITE_API_BASE?.replace(/\/$/, "") || "http://localhost:5000"
+  (RAW?.replace(/\/+$/, "") ||
+    // local dev fallback:
+    "http://localhost:5000") as string
 
 async function fetchJSON<T>(
   path: string,
   init: RequestInit = {},
-  timeoutMs = 12000
+  timeoutMs = 12_000
 ): Promise<T> {
   const ctrl = new AbortController()
-  const t = setTimeout(() => ctrl.abort(), timeoutMs)
-
+  const to = setTimeout(() => ctrl.abort(), timeoutMs)
   try {
-    const res = await fetch(`${API_BASE}${path}`, { ...init, signal: ctrl.signal })
-    const data = (await res.json().catch(() => ({}))) as T
+    const res = await fetch(`${API_BASE}${path}`, {
+      headers: { "Content-Type": "application/json", ...(init.headers || {}) },
+      signal: ctrl.signal,
+      ...init,
+    })
+    const isJSON = res.headers.get("content-type")?.includes("application/json")
+    const data = (isJSON ? await res.json() : await res.text()) as T
 
     if (!res.ok) {
       const msg =
-        (data as any)?.error ||
+        (isJSON && (data as any)?.error) ||
         `Request failed: ${res.status} ${res.statusText}`
       throw new Error(msg)
     }
     return data
   } finally {
-    clearTimeout(t)
+    clearTimeout(to)
   }
 }
 
-/* Fetch all projects */
+/* Fetch all projects (make sure /api/projects exists on the server) */
 export async function getProjects(): Promise<{ projects: Project[] }> {
   try {
     return await fetchJSON<{ projects: Project[] }>("/api/projects")
@@ -53,11 +64,15 @@ export async function getProjects(): Promise<{ projects: Project[] }> {
   }
 }
 
-/* Send contact form data */
+/* Send contact form data (remember to pass website: "" for honeypot) */
 export async function sendContact(body: ContactBody): Promise<ContactResp> {
   return fetchJSON<ContactResp>("/api/contact", {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(body),
+    body: JSON.stringify({ website: "", ...body }),
   })
+}
+
+/* Optional: quick health check helper */
+export async function health(): Promise<{ ok: boolean }> {
+  return fetchJSON<{ ok: boolean }>("/api/health", { method: "GET" })
 }
