@@ -5,3 +5,19 @@
 @tailwind utilities;
 
 html { scroll-behavior: smooth; }
+
+/* blinking caret for typewriter */
+.type-caret {
+  display: inline-block;
+  margin-left: 4px;
+  opacity: 1;
+  animation: caret-blink 1s step-end infinite;
+}
+html, body {
+    background-color: #0A0F1F !important;
+  color-scheme: only dark;
+}
+
+@keyframes caret-blink {
+  50% { opacity: 0; }
+}

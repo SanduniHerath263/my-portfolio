@@ -2,6 +2,50 @@ import { useEffect, useRef, useState } from "react"
 import { getProjects, sendContact, type Project } from "../lib/api"
 import { FaLinkedin, FaGithub } from "react-icons/fa";
 
+function Typewriter({
+  text,
+  speed = 40,         
+  startDelay = 300,   
+  className = "",
+  showCursor = true,
+}: {
+  text: string
+  speed?: number
+  startDelay?: number
+  className?: string
+  showCursor?: boolean
+}) {
+  const [out, setOut] = useState("")
+  const i = useRef(0)
+
+  useEffect(() => {
+    let startTimer: number | undefined
+    let interval: number | undefined
+
+    startTimer = window.setTimeout(() => {
+      interval = window.setInterval(() => {
+        i.current += 1
+        setOut(text.slice(0, i.current))
+        if (i.current >= text.length) {
+          window.clearInterval(interval)
+        }
+      }, speed)
+    }, startDelay)
+
+    return () => {
+      window.clearTimeout(startTimer)
+      window.clearInterval(interval)
+    }
+  }, [text, speed, startDelay])
+
+  return (
+    <span className={className}>
+      {out}
+      {showCursor && <span className="type-caret">|</span>}
+    </span>
+  )
+}
+
 export default function PortfolioPg() {
   return (
     <div className="min-h-screen text-white" style={{ backgroundColor: "#0A0F1F" }}>
@@ -15,14 +59,12 @@ export default function PortfolioPg() {
   )
 }
 
-/* ---------------------- TOP BAR ---------------------- */
 function TopBar() {
   const links = [
     ["#home", "Home"],
     ["#projects", "Projects"],
     ["#beyond", "Beyond Code"],
-    ["#contact", "Contact"],
-
+    ["#contact", "Contact Me"],
   ] as const
 
   return (
@@ -43,9 +85,8 @@ function TopBar() {
             </li>
           ))}
         </ul>
-         {/* Download CV Button */}
           <a
-            href="/assets/Sanduni_Herath_CV.pdf" // make sure CV is in /public/assets/
+            href="/assets/Sanduni_Upeksha_Herath.pdf" 
             download
             className="px-4 py-1.5 rounded-full bg-gradient-to-r from-[#00B4DB] to-[#0083B0] text-white text-sm font-medium hover:opacity-90 transition"
           >
@@ -56,11 +97,9 @@ function TopBar() {
   )
 }
 
-/* ---------------------- HERO ---------------------- */
 function HeroSection() {
   return (
     <section id="home" className="relative overflow-hidden">
-      {/* Light blue gradient background */}
       <div
         className="pointer-events-none absolute inset-0"
         style={{
@@ -68,22 +107,23 @@ function HeroSection() {
             "radial-gradient(800px 400px at 50% 50%, rgba(0,180,219,0.25), transparent 60%)",
         }}
       />
-
       <div className="max-w-7xl mx-auto px-6 pt-16 pb-8 md:pb-10">
-        {/* Heading */}
         <h1 className="mt-3 text-5xl sm:text-6xl font-extrabold leading-tight text-center">
           Hello, I’m{" "}
           <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#00B4DB] to-[#0083B0]">
             Sanduni Upeksha Herath
           </span>
         </h1>
-        <p className="mt-4 text-[#AEE4FF] text-lg text-center">
-          • Software Engineering Undergraduate 
-        </p>
-
-        {/* Gradient bubble with picture + paragraph */}
+<div className="mt-4 text-center text-[#AEE4FF] text-lg min-h-[28px]">
+  <Typewriter
+    text="• Passionate Software Engineering Undergraduate | Turning Challenges into Solutions"
+    speed={35}
+    startDelay={400}
+    className="inline-block"
+    showCursor
+  />
+</div>
         <div className="mt-12 flex flex-col md:flex-row items-center gap-10 bg-gradient-to-r from-[#001F33] to-[#002B40] rounded-2xl p-8 shadow-lg">
-          {/* Profile Picture */}
           <div className="flex-shrink-0">
             <div className="relative">
               <div className="absolute -inset-2 rounded-full bg-gradient-to-r from-[#00B4DB] to-[#0083B0] blur-xl opacity-30" />
@@ -94,27 +134,16 @@ function HeroSection() {
               />
             </div>
           </div>
-
-          {/* Paragraph + Icons */}
-          <div className="text-white/80 leading-relaxed text-sm sm:text-base max-w-2xl">
-
+          <div className="text-white/80 leading-relaxed text-sm sm:text-base max-w-4xl">
             <p>
-              I am currently an undergraduate specializing in Software Engineering, with a strong passion
- for building impactful and user-centered software solutions. My academic journey is
- supported by hands-on project experience and a solid foundation in both frontend and
- backend development. My chess experience has enhanced my critical thinking and focus,
- which directly support my approach to software development. I am eager to contribute to
- innovative projects in a collaborative environment while continuously learning and growing
- as a developer
+              I’m an enthusiastic Software Engineering undergraduate with a passion for creating meaningful, user-focused software solutions. With experience across both frontend and backend development, I enjoy turning ideas into impactful products. My journey in chess has sharpened my critical thinking, patience, and focus — qualities I carry into every project I build. I thrive in collaborative environments, love solving challenges, and am always eager to learn, grow, and contribute to innovative projects.
             </p>
-
-            {/* Social Icons */}
             <div className="mt-5 flex gap-4">
               <a
                 href="https://www.linkedin.com/in/sanduni-upeksha-herath-705a07312/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-[#AEE4FF] hover:text-white text-2xl transition"
+                className="text-[#AEE4FF] hover:text-white text-3xl transition"
               >
                 <FaLinkedin />
               </a>
@@ -122,7 +151,7 @@ function HeroSection() {
                 href="https://github.com/SanduniHerath263"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-[#AEE4FF] hover:text-white text-2xl transition"
+                className="text-[#AEE4FF] hover:text-white text-3xl transition"
               >
                 <FaGithub />
               </a>
@@ -134,13 +163,11 @@ function HeroSection() {
   );
 }
 
-/* ---------------------- PROJECTS ---------------------- */
 function ProjectsSection() {
   const [, setProjects] = useState<Project[]>([])
   const [, setLoading] = useState(true)
   const fetched = useRef(false)
 
-  // Featured projects (from your CV) — tech names unchanged
   const cvProjects = [
     {
       title: "Travel Lanka — Tourism Management System",
@@ -186,7 +213,6 @@ function ProjectsSection() {
     tags,
   }: { title: string; description: string; tags?: string[] }) => (
     <article className="rounded-xl bg-white/[0.02] border border-white/10 hover:bg-white/[0.04] transition-colors">
-      {/* slim gradient bar for accent (neat, not loud) */}
       <div className="h-1 w-full bg-gradient-to-r from-[#00B4DB] to-[#0083B0] rounded-t-xl" />
       <div className="p-5">
         <h4 className="font-semibold text-white">{title}</h4>
@@ -214,7 +240,6 @@ function ProjectsSection() {
           Projects
         </h2>
 
-        {/* Featured from CV */}
         <div className="mt-4 grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {cvProjects.map(p => <Card key={p.title} {...p} />)}
         </div>
@@ -223,14 +248,13 @@ function ProjectsSection() {
   )
 }
 
-
-/* ---------------------- BEYOND CODE ---------------------- */
 function BeyondCode() {
   const events = [
     { icon: "♜", title: "SLIIT Women’s Chess Captain", meta: "2025–2026" },
     { icon: "♞", title: "Member of the University of Kelaniya Chess Team", meta: "2024 – Present" },
-    { icon: "🏅", title: "Awarded Colors from University of Kelaniya", meta: "2024" },
-    { icon: "🏅", title: "Awarded Colors from Sri Lanka Institute of Information Technology (SLIIT)", meta: "2023 & 2024" },
+    { icon: "♞", title: "Member of the SLIIT Chess Team", meta: "2023 – Present" },
+    { icon: "🏅", title: "Received Colors from University of Kelaniya", meta: "2024" },
+    { icon: "🏅", title: "Received Colors from the Sri Lanka Institute of Information Technology (SLIIT)", meta: "2023 & 2024" },
     { icon: "♟", title: "School Chess Captain - Musaeus College", meta: "2019–2020" },
   ]
 
@@ -238,10 +262,8 @@ function BeyondCode() {
     <section id="beyond" className="bg-[#0C1426]">
       <div className="max-w-7xl mx-auto px-6 py-16">
         <h2 className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-[#00B4DB] to-[#0083B0]">
-          Beyond Code
+          Beyond The Code
         </h2>
-
-        {/* Small intro paragraph */}
         <p className="mt-4 text-white/75 max-w-3xl">
           Chess has been a defining part of my personal and academic journey,
           sharpening my strategic thinking, focus, and decision-making under
@@ -250,7 +272,6 @@ function BeyondCode() {
           in software engineering.
         </p>
 
-        {/* Achievements list */}
         <ol className="mt-8 relative border-s border-white/10">
           {events.map((e, idx) => (
             <li key={idx} className="mb-8 ms-6">
@@ -272,7 +293,6 @@ function BeyondCode() {
   )
 }
 
-/* ---------------------- CONTACT ---------------------- */
 function ContactSection() {
   const [form, setForm] = useState({ name: "", email: "", message: "", website: "" });
   const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
@@ -301,8 +321,6 @@ function ContactSection() {
         <h2 className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-[#00B4DB] to-[#0083B0]">
           Contact Me
         </h2>
-
-        {/* Friendly caption */}
         <p className="mt-3 text-white/75 max-w-2xl mx-auto">
           Whether you have a project in mind, a question, or an opportunity to collaborate, I’d be happy to connect. Send me a message and I’ll respond as soon as possible.
         </p>
@@ -345,9 +363,6 @@ function ContactSection() {
   );
 }
 
-
-
-/* ---------------------- FOOTER ---------------------- */
 function Footer() {
   return (
     <footer className="border-t border-white/10 text-center py-4 text-white/60 text-sm">
