@@ -6,17 +6,40 @@
 
 html { scroll-behavior: smooth; }
 
-/* blinking caret for typewriter */
+
 .type-caret {
   display: inline-block;
   margin-left: 4px;
   opacity: 1;
   animation: caret-blink 1s step-end infinite;
 }
+
+:root { color-scheme: dark; }
+
 html, body {
-    background-color: #0A0F1F !important;
-  color-scheme: only dark;
+  background: #0A0F1F;
+  color: #E6F2FF;           
 }
+
+a { color: #AEE4FF; }
+a:visited { color: #9BD3FF; }
+
+input, textarea, select, button {
+  background-color: rgba(255,255,255,0.05);
+  color: #E6F2FF;
+  border-color: rgba(255,255,255,0.15);
+  caret-color: #E6F2FF;
+}
+
+/* iOS/Chrome autofill fix */
+input:-webkit-autofill,
+textarea:-webkit-autofill,
+select:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0 30px rgba(255,255,255,0.05) inset !important;
+  -webkit-text-fill-color: #E6F2FF !important;
+  caret-color: #E6F2FF !important;
+}
+
 
 @keyframes caret-blink {
   50% { opacity: 0; }
