@@ -136,8 +136,8 @@ function HeroSection() {
 
 /* ---------------------- PROJECTS ---------------------- */
 function ProjectsSection() {
-  const [projects, setProjects] = useState<Project[]>([])
-  const [loading, setLoading] = useState(true)
+  const [, setProjects] = useState<Project[]>([])
+  const [, setLoading] = useState(true)
   const fetched = useRef(false)
 
   // Featured projects (from your CV) — tech names unchanged
