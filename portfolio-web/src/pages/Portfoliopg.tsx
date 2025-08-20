@@ -304,7 +304,7 @@ function BeyondCode() {
         <p className="mt-4 text-white/75 max-w-3xl">
           Chess has been a defining part of my personal and academic journey,
           sharpening my strategic thinking, focus, and decision-making under
-          pressure. From leading university teams to winning awards, the skills
+          pressure. From leading teams to winning awards, the skills
           I’ve gained from chess directly influence how I approach problem-solving
           in software engineering.
         </p>
