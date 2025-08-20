@@ -52,6 +52,7 @@ export default function PortfolioPg() {
       <TopBar />
       <HeroSection />
       <ProjectsSection />
+          <Technologies />
       <BeyondCode />
       <ContactSection />
       <Footer />
@@ -63,6 +64,7 @@ function TopBar() {
   const links = [
     ["#home", "Home"],
     ["#projects", "Projects"],
+      ["#technologies", "Skills"],
     ["#beyond", "Beyond Code"],
     ["#contact", "Contact Me"],
   ] as const
@@ -247,6 +249,41 @@ function ProjectsSection() {
     </section>
   )
 }
+/* ---------------------- TECHNOLOGIES ---------------------- */
+function Technologies() {
+  const techs = [
+    "Java", "JavaScript", "React", "TypeScript", "Node.js", "Express",
+    "MongoDB", "MySQL", "PHP", "Git", "Tailwind CSS", "Figma",
+    "Android Studio", "Kotlin", "HTML", "CSS", "C","C++"
+  ]
+
+  return (
+    <section id="technologies" className="bg-[#0A0F1F]">
+      <div className="max-w-7xl mx-auto px-6 py-16 text-center">
+        <h2 className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-[#00B4DB] to-[#0083B0]">
+          Technologies I Use
+        </h2>
+        <p className="mt-3 text-white/70 max-w-2xl mx-auto">
+          A collection of tools, frameworks, and languages I use to design,
+          develop, and deliver projects with clean code and great user experience.
+        </p>
+
+        {/* Tech Badges */}
+        <div className="mt-8 flex flex-wrap justify-center gap-3">
+          {techs.map(t => (
+            <span
+              key={t}
+              className="px-4 py-2 rounded-full text-sm font-medium text-[#AEE4FF] border border-[#00B4DB]/40 bg-[#001F33]/40 hover:bg-[#002B40] transition"
+            >
+              {t}
+            </span>
+          ))}
+        </div>
+      </div>
+    </section>
+  )
+}
+
 
 function BeyondCode() {
   const events = [
